@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator</title>
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #1A1A19;
+            color: #F9BE08;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Logo Container */
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px; /* Moved to top-left */
+            width: 100px;
+            height: 100px;
+            border: 0px solid #F9BE08;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #1A1A19;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Main Content */
+        .content {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .result {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+
+        /* Button Styling */
+        button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #1A1A19;
+            background-color: #F9BE08;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #F9BE08, 0 0 20px #F9BE08, 0 0 30px #F9BE08;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #F9BE08, 0 0 40px #F9BE08, 0 0 60px #F9BE08;
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="loog.png" alt="Logo">
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Random Number Generator</h1>
+        <div class="result" id="result">Roll the dice!</div>
+        <button onclick="generateNumber()">Roll the Dice</button>
+    </div>
+
+    <script>
+        let currentNumber = null;
+
+        function generateNumber() {
+            const resultElement = document.getElementById('result');
+            currentNumber = Math.floor(Math.random() * 6) + 1;
+            resultElement.textContent = ` Rolled: ${currentNumber}`;
+            
+            setTimeout(() => {
+                applyDecisionLogic();
+            }, 4000);
+        }
+
+        function applyDecisionLogic() {
+            const resultElement = document.getElementById('result');
+            const decision = Math.random();
+
+            if (decision < 0.3) { // 30% chance: going forward double
+                resultElement.textContent = `Result: ${currentNumber * 2} (Going Forward Double!)`;
+            } else if (decision < 0.4) { // 10% chance: going back with half
+                resultElement.textContent = `Result: ${currentNumber / 2} (Going Back Half!)`;
+            } else if (decision < 0.8) { // 40% chance: blank
+                resultElement.textContent = `Result: Blank`;
+            } else if (decision < 0.9) { // 20% chance: rolls again
+                generateNumber();
+            } else { // If the number is not even, subtract 1 and divide by 2
+                if (currentNumber % 2 !== 0) {
+                    const modifiedNumber = Math.floor((currentNumber - 1) / 2);
+                    resultElement.textContent = `Result: ${modifiedNumber} (Odd Number Adjusted!)`;
+                } else {
+                    resultElement.textContent = `Result: Blank`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
