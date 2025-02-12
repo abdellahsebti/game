@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #1A1A19;
+            background: linear-gradient(135deg, #1A1A19, #333333);
             color: #F9BE08;
             display: flex;
             flex-direction: column;
@@ -18,21 +18,22 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
         /* Logo Container */
         .logo-container {
             position: absolute;
             top: 20px;
-            left: 20px; /* Top-left corner */
+            left: 20px;
             width: 100px;
             height: 100px;
-            border: 0px solid #F9BE08;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #1A1A19;
+            background: radial-gradient(circle, rgba(249, 190, 8, 0.2), transparent);
+            animation: pulseLogo 2s infinite;
         }
         .logo-container img {
             max-width: 100%;
@@ -50,6 +51,21 @@
         .result {
             font-size: 3rem;
             margin-bottom: 30px;
+            position: relative;
+        }
+        .result::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(249, 190, 8, 0.5);
+            border-radius: 50%;
+            animation: glowEffect 1.5s ease-out forwards;
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* Button Styling */
@@ -57,16 +73,24 @@
             padding: 15px 30px;
             font-size: 1rem;
             color: #1A1A19;
-            background-color: #F9BE08;
+            background: linear-gradient(135deg, #FFC300, #F9BE08);
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 5px #F9BE08, 0 0 50px #F9BE08, 0 0 5px #F9BE08;
+            box-shadow: 0 0 20px rgba(249, 190, 8, 0.5);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         button:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 20px #F9BE08, 0 0 40px #F9BE08, 0 0 60px #F9BE08;
+            box-shadow: 0 0 40px rgba(249, 190, 8, 0.8);
+        }
+
+        /* Spinning Logo Animation */
+        .spinning-logo {
+            width: 50px;
+            height: 50px;
+            animation: spinLogo 1s ease-in-out;
+            display: inline-block;
         }
 
         /* Responsive Design */
@@ -88,6 +112,46 @@
                 left: 15px;
             }
         }
+
+        /* Keyframe Animations */
+        @keyframes pulseLogo {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(249, 190, 8, 0.5);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(249, 190, 8, 0.8);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(249, 190, 8, 0.5);
+            }
+        }
+
+        @keyframes glowEffect {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+
+        @keyframes spinLogo {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -107,7 +171,18 @@
         function generateNumber() {
             const resultElement = document.getElementById('result');
             const randomNumber = Math.floor(Math.random() * 6) + 1; // Generate a number between 1 and 6
-            resultElement.textContent = `Rolled: ${randomNumber}`;
+
+            // Add a spinning logo animation
+            resultElement.innerHTML = `<img src="loog.png" alt="Spinning Logo" class="spinning-logo">`;
+            resultElement.style.animation = 'none';
+            void resultElement.offsetWidth; // Force reflow to reset the animation
+            resultElement.style.animation = 'spinLogo 1s ease-in-out';
+
+            // Update the result after the animation ends
+            setTimeout(() => {
+                resultElement.textContent = `Rolled: ${randomNumber}`;
+                resultElement.style.animation = 'glowEffect 1.5s ease-out forwards';
+            }, 1000);
         }
     </script>
 </body>
